@@ -1,35 +1,21 @@
 /*
 	South Central Roleplay by Emmet
+	Coisas a considerar:
 
-	Description:
+    * "pHouse", "pBusiness" e "pEntrance" representa o SQL ID. Use "GetHouseByID", "GetBusinessByID" e "GetEntranceByID" 
+	para obter o ID do enumerador que pode ser usado com "HouseData", "BusinessData" e "EntranceData".
 
-	  This script started development in February 2014 and finished exactly
-	  3 months later. The script was released last year and it was full of bugs
-	  that were left unfixed. Instead of abandoning the script I decided to update
-	  it to the latest MySQL version and fixed a handful of bugs.
+	* "Inventory_Add" adiciona um item, "Inventory_Count" retorna a quantidade do item
+	e "Inventory_Remove" remove um item. Use "Inventory_HasItem" para verificar se o player possui um item.
 
- 	  SC:RP managed to get 70+ players with this script. It was a good run
- 	  while it lasted. I've had many good memories coding and playing around
-	  with this script. I've moved on from SA-MP now so hopefully this script
-	  is stable enough for use.
-
-	Things to consider:
-
-    * "pHouse", "pBusiness" and "pEntrance" represent the SQL ID. Use
-	  "GetHouseByID", "GetBusinessByID" and "GetEntranceByID" to get the enum ID
-	  that can be used with "HouseData", "BusinessData" and "EntranceData".
-
-	* "Inventory_Add" adds an item, "Inventory_Count" returns the quantity of the item
-	  and "Inventory_Remove" removes an item. Use "Inventory_HasItem" to check if a player
-	  has an item.
-
-	Credits:
+	Créditos:
 
 	* Emmet (original script)
  	* Apple (scripter)
  	* Risky (ran the server)
+	* Caliiu (translate pt-br)
 
-	Copyright(c) 2012-2015 Emmet Jones (All rights reserved).
+	Copyright(c) 2012-2015 Emmet Jones (Todos direitos reservados).
 */
 
 #pragma dynamic 500000
@@ -130,16 +116,16 @@
 #define JOB_WEAPON_SMUGGLER (9)
 
 #define SendServerMessage(%0,%1) \
-	SendClientMessageEx(%0, COLOR_SERVER, "[SERVER]:{FFFFFF} "%1)
+	SendClientMessageEx(%0, COLOR_SERVER, "[Server]:{FFFFFF} "%1)
 
 #define SendSyntaxMessage(%0,%1) \
-	SendClientMessageEx(%0, COLOR_GREY, "[SYNTAX]:{FFFFFF} "%1) // COLOR_YELLOW
+	SendClientMessageEx(%0, COLOR_GREY, "[Use]:{FFFFFF} "%1) // COLOR_YELLOW
 
 #define SendErrorMessage(%0,%1) \
-	SendClientMessageEx(%0, COLOR_LIGHTRED, "[ERROR]:{FFFFFF} "%1)
+	SendClientMessageEx(%0, COLOR_LIGHTRED, "[Erro]:{FFFFFF} "%1)
 
 #define SendAdminAction(%0,%1) \
-	SendClientMessageEx(%0, COLOR_CLIENT, "[ADMIN]:{FFFFFF} "%1) // COLOR_YELLOW
+	SendClientMessageEx(%0, COLOR_CLIENT, "[Admin]:{FFFFFF} "%1) // COLOR_YELLOW
 
 #define MAX_BILLBOARDS (50)
 #define MAX_REPORTS (50)
@@ -1773,7 +1759,7 @@ stock ViewFactions(playerid)
 	for (new i = 0; i != MAX_FACTIONS; i ++) if (FactionData[i][factionExists]) {
  		format(string, sizeof(string), "%s{FFFFFF}Faction ({FFBF00}%i{FFFFFF}) | %s\n", string, i, FactionData[i][factionName]);
 	}
-	Dialog_Show(playerid, FactionsList, DIALOG_STYLE_MSGBOX, "Factions List", string, "Close", "");
+	Dialog_Show(playerid, FactionsList, DIALOG_STYLE_MSGBOX, "Factions List", string, "Fechar", "");
 	return 1;
 }
 stock SQL_ReturnEscaped(const string[])
@@ -2060,7 +2046,7 @@ public OnViewBillboards(extraid, name[])
 	    format(string, sizeof(string), "%s{FFFFFF}Billboard ({FFBF00}%i{FFFFFF}) | %s | $%d\n", string, i, desc, BillBoardData[i][bbPrice]);
 	}
 	format(desc, sizeof(desc), "Los Santos Billboards Agency", name);
-	Dialog_Show(extraid, Billboards, DIALOG_STYLE_LIST, desc, string, "Close", "");
+	Dialog_Show(extraid, Billboards, DIALOG_STYLE_LIST, desc, string, "Fechar", "");
 	return 1;
 }
 forward StopChatting(playerid);
@@ -3724,7 +3710,7 @@ stock Backpack_Items(playerid, id)
 		strcat(string, "Take Backpack");
 
 		PlayerData[playerid][pBackpackLoot] = id;
-		Dialog_Show(playerid, BackpackLoot, DIALOG_STYLE_LIST, "Backpack", string, "Select", "Cancel");
+		Dialog_Show(playerid, BackpackLoot, DIALOG_STYLE_LIST, "Backpack", string, "Selecionar", "Cancelar");
 	}
 	return 1;
 }
@@ -3750,7 +3736,7 @@ stock Backpack_Open(playerid)
 
 			BackpackListed[playerid][count++] = i;
 		}
-		Dialog_Show(playerid, Backpack, DIALOG_STYLE_LIST, "My Backpack", string, "Select", "Cancel");
+		Dialog_Show(playerid, Backpack, DIALOG_STYLE_LIST, "My Backpack", string, "Selecionar", "Cancelar");
 	}
 	return 1;
 }
@@ -5994,7 +5980,7 @@ Rack_ShowGuns(playerid, rackid)
 
 			else format(string, sizeof(string), "%s%d: %s - %d bullets\n", string, i + 1, ReturnWeaponName(RackData[rackid][rackWeapons][i]), RackData[rackid][rackAmmo][i]);
 		}
-		Dialog_Show(playerid, RackWeapons, DIALOG_STYLE_LIST, "Weapon Rack", string, "Select", "Cancel");
+		Dialog_Show(playerid, RackWeapons, DIALOG_STYLE_LIST, "Weapon Rack", string, "Selecionar", "Cancelar");
 	}
 	return 1;
 }
@@ -7625,7 +7611,7 @@ Car_WeaponStorage(playerid, carid)
 		else
 		    format(string, sizeof(string), "%s%s\n", string, (CarData[carid][carWeapons][i]) ? (ReturnWeaponName(CarData[carid][carWeapons][i])) : ("Empty Slot"));
 	}
-	Dialog_Show(playerid, Trunk, DIALOG_STYLE_LIST, "Car Trunk", string, "Select", "Cancel");
+	Dialog_Show(playerid, Trunk, DIALOG_STYLE_LIST, "Car Trunk", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -7654,7 +7640,7 @@ Car_ShowTrunk(playerid, carid)
 	strcat(string, "Weapon Storage");
 
 	PlayerData[playerid][pStorageSelect] = 0;
-	Dialog_Show(playerid, CarStorage, DIALOG_STYLE_LIST, "Car Storage", string, "Select", "Cancel");
+	Dialog_Show(playerid, CarStorage, DIALOG_STYLE_LIST, "Car Storage", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -10141,7 +10127,7 @@ stock House_WeaponStorage(playerid, houseid)
 		else
 			format(string, sizeof(string), "%s%s (Ammo: %d)\n", string, ReturnWeaponName(HouseData[houseid][houseWeapons][i]), HouseData[houseid][houseAmmo][i]);
 	}
-	Dialog_Show(playerid, HouseWeapons, DIALOG_STYLE_LIST, "Weapon Storage", string, "Select", "Cancel");
+	Dialog_Show(playerid, HouseWeapons, DIALOG_STYLE_LIST, "Weapon Storage", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -10170,7 +10156,7 @@ stock House_ShowItems(playerid, houseid)
 			else format(string, sizeof(string), "%s%s (%d)\n", string, name, HouseStorage[houseid][i][hItemQuantity]);
 		}
 	}
-	Dialog_Show(playerid, HouseItems, DIALOG_STYLE_LIST, "Item Storage", string, "Select", "Cancel");
+	Dialog_Show(playerid, HouseItems, DIALOG_STYLE_LIST, "Item Storage", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -10195,7 +10181,7 @@ stock House_OpenStorage(playerid, houseid)
 	else
 		format(string, sizeof(string), "Item Storage (%d/%d)\nWeapon Storage (%d/10)\nMoney Safe (%s)", items[0], MAX_HOUSE_STORAGE, items[1], FormatNumber(HouseData[houseid][houseMoney]));
 
-	Dialog_Show(playerid, HouseStorage, DIALOG_STYLE_LIST, "House Storage", string, "Select", "Cancel");
+	Dialog_Show(playerid, HouseStorage, DIALOG_STYLE_LIST, "House Storage", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -13759,12 +13745,12 @@ public OnQueryFinished(extraid, threadid)
 
 				if (!strcmp(username, "null", true) || !username[0])
 				{
-				    Dialog_Show(extraid, ShowOnly, DIALOG_STYLE_MSGBOX, "Ban Notice", "Your IP is banned from this server.\n\nIP: %s\nDate: %s\nReason: %s\n\nTo request a ban appeal, please visit our website and submit a ban appeal.", "Close", "", PlayerData[extraid][pIP], date, reason);
+				    Dialog_Show(extraid, ShowOnly, DIALOG_STYLE_MSGBOX, "Aviso de Banimento", "Seu IP foi banido deste servidor.\n\nIP: %s\nData: %s\nMotivo: %s\n\nPara solicitar uma revisão de banimento, visite nosso site.", "Fechar", "", PlayerData[extraid][pIP], date, reason);
 					KickEx(extraid);
 				}
 				else
 				{
-				    Dialog_Show(extraid, ShowOnly, DIALOG_STYLE_MSGBOX, "Ban Notice", "You are banned from this server.\n\nUsername: %s\nDate: %s\nReason: %s\n\nTo request a ban appeal, please visit our website and submit a ban appeal.", "Close", "", PlayerData[extraid][pUsername], date, reason);
+				    Dialog_Show(extraid, ShowOnly, DIALOG_STYLE_MSGBOX, "Aviso de Banimento", "Você foi banido deste servidor.\n\nUsuario: %s\nData: %s\nMotivo: %s\n\nPara solicitar uma revisão de banimento, visite nosso site.", "Fechar", "", PlayerData[extraid][pUsername], date, reason);
 					KickEx(extraid);
 				}
 		    }
@@ -13847,7 +13833,7 @@ public OnViewCharges(extraid, name[])
 	    format(string, sizeof(string), "%s%s (%s)\n", string, desc, date);
 	}
 	format(desc, sizeof(desc), "Charges: %s", name);
-	Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Close", "");
+	Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Fechar", "");
 	return 1;
 }
 
@@ -16334,7 +16320,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			if (PlayerData[playerid][pTask] && !PlayerData[playerid][pStoreTask])
 			{
 			    PlayerData[playerid][pStoreTask] = 1;
-			    Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "Retail Store", "This business is a Retail Store. You can purchase many items here using the /buy command.\nThere are many useful things that you can purchase here, which are added to your inventory.\n\nThe most useful item is the GPS System, as this device allows you to find what you need.\nYou can leave this business at any time by pressing the 'F' key at the door.", "Close", "");
+			    Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "Retail Store", "This business is a Retail Store. You can purchase many items here using the /buy command.\nThere are many useful things that you can purchase here, which are added to your inventory.\n\nThe most useful item is the GPS System, as this device allows you to find what you need.\nYou can leave this business at any time by pressing the 'F' key at the door.", "Fechar", "");
 
 			    if (IsTaskCompleted(playerid))
 				{
@@ -16378,7 +16364,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				if (EntranceData[id][entranceType] == 2 && !PlayerData[playerid][pBankTask])
 				{
 			    	PlayerData[playerid][pBankTask] = 1;
-			    	Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "Banking", "This is one of the banks of San Andreas. You can manage your bank accounts here.\nEach player has a standard bank account and a savings account for extra funds.\n\nYou can type /bank inside this building to manage either of your bank accounts.\nIf you are near any ATM machine, you can use the /atm command for your banking needs.", "Close", "");
+			    	Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "Banking", "This is one of the banks of San Andreas. You can manage your bank accounts here.\nEach player has a standard bank account and a savings account for extra funds.\n\nYou can type /bank inside this building to manage either of your bank accounts.\nIf you are near any ATM machine, you can use the /atm command for your banking needs.", "Fechar", "");
 
 				    if (IsTaskCompleted(playerid))
 					{
@@ -16389,7 +16375,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				else if (EntranceData[id][entranceType] == 1 && !PlayerData[playerid][pTestTask])
 				{
 			    	PlayerData[playerid][pTestTask] = 1;
-			    	Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "DMV", "The DMV is where a player can attempt the driving test to obtain their license.\nYou must avoid hitting obstacles, damaging the vehicle or speeding during the test.\n\nIt is legally required to possess a driving license to drive in San Andreas.\nDriving without a license can result in several consequences by law enforcement.", "Close", "");
+			    	Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_MSGBOX, "DMV", "The DMV is where a player can attempt the driving test to obtain their license.\nYou must avoid hitting obstacles, damaging the vehicle or speeding during the test.\n\nIt is legally required to possess a driving license to drive in San Andreas.\nDriving without a license can result in several consequences by law enforcement.", "Fechar", "");
 
 				    if (IsTaskCompleted(playerid))
 					{
@@ -16525,7 +16511,7 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 	if (!ispassenger && id != -1 && CarData[id][carFaction] > 0 && GetFactionType(playerid) != CarData[id][carFaction]) {
 	    ClearAnimations(playerid);
 
-	    return SendErrorMessage(playerid, "You don't have the keys to this vehicle.");
+	    return SendErrorMessage(playerid, "Você não tem as chaves deste veículo.");
 	}
 	return 1;
 }
@@ -16541,18 +16527,20 @@ public OnPlayerEnterCheckpoint(playerid)
 	{
 	    if (!IsPlayerInAnyVehicle(playerid))
 		{
-		    SendErrorMessage(playerid, "You're not in a vehicle");
+		    SendErrorMessage(playerid, "Você não está em um veículo");
 		    return 1;
 		}
 		new vehicleid = GetPlayerVehicleID(playerid);
 		if (!IsLoadableVehicle(vehicleid))
   		{
-  			SendErrorMessage(playerid, "You're not in a delivery vehicle.");
+  			SendErrorMessage(playerid, "Você não está em um veículo de entrega.");
   		}
+
 	    new string[180];
-        format(string, sizeof(string), "You have earned $%d from the courier mission!", TruckingCheck[playerid]);
+        format(string, sizeof(string), "Você ganhou $%d nas entregas!", TruckingCheck[playerid]);
         GiveMoney(playerid, TruckingCheck[playerid]);
         TruckingCheck[playerid] = 0;
+
 		SendClientMessageEx(playerid, COLOR_LIGHTYELLOW, string);
 		DisablePlayerCheckpoint(playerid);
 		RespawnVehicle(vehicleid);
@@ -16567,13 +16555,13 @@ public OnPlayerEnterCheckpoint(playerid)
 	    new id = -1;
 
 		if ((id = Entrance_Nearest(playerid)) != -1 && EntranceData[id][entranceType] == 2 && !PlayerData[playerid][pBankTask])
-		    ShowPlayerFooter(playerid, "Press ~y~'F'~w~ to enter this bank.");
+		    ShowPlayerFooter(playerid, "Pressione ~y~'F'~w~ para entrar neste banco.");
 
         if ((id = Business_Nearest(playerid)) != -1 && BusinessData[id][bizType] == 1 && !PlayerData[playerid][pStoreTask])
-		    ShowPlayerFooter(playerid, "Press ~y~'F'~w~ to enter this retail store.");
+		    ShowPlayerFooter(playerid, "Pressione ~y~'F'~w~ para entrar nesta loja de varejo.");
 
         if ((id = Entrance_Nearest(playerid)) != -1 && EntranceData[id][entranceType] == 1 && !PlayerData[playerid][pTestTask])
-		    ShowPlayerFooter(playerid, "Press ~y~'F'~w~ to enter this DMV.");
+		    ShowPlayerFooter(playerid, "Pressione ~y~'F'~w~ para entrar neste DMV.");
 
 		DisablePlayerCheckpoint(playerid);
 	}
@@ -21665,10 +21653,10 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
 		    	format(name, sizeof(name), "%s (%d)", name, InventoryData[playerid][index][invQuantity]);
 
 		    	if (Garbage_Nearest(playerid) != -1) {
-					Dialog_Show(playerid, Inventory, DIALOG_STYLE_LIST, name, "Use Item\nGive Item\nThrow Out", "Select", "Cancel");
+					Dialog_Show(playerid, Inventory, DIALOG_STYLE_LIST, name, "Use Item\nGive Item\nThrow Out", "Selecionar", "Cancelar");
 				}
 				else {
-				    Dialog_Show(playerid, Inventory, DIALOG_STYLE_LIST, name, "Use Item\nGive Item\nDrop Item", "Select", "Cancel");
+				    Dialog_Show(playerid, Inventory, DIALOG_STYLE_LIST, name, "Use Item\nGive Item\nDrop Item", "Selecionar", "Cancelar");
 				}
 			}
 		}
@@ -21823,12 +21811,12 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
  	    {
 	        if (!DealershipCars[id][index][vehModel])
 	        {
-	            Dialog_Show(playerid, AddVehicle, DIALOG_STYLE_LIST, "Add Vehicle", "Add by Name\nAdd by Thumbnail", "Select", "Cancel");
+	            Dialog_Show(playerid, AddVehicle, DIALOG_STYLE_LIST, "Add Vehicle", "Add by Name\nAdd by Thumbnail", "Selecionar", "Cancelar");
 			}
 			else
 			{
 			    PlayerData[playerid][pDealerCar] = index;
-			    Dialog_Show(playerid, CarOptions, DIALOG_STYLE_LIST, "Dealership Vehicle", "Set Price (%s)\nRemove Vehicle", "Select", "Cancel", FormatNumber(DealershipCars[id][index][vehPrice]));
+			    Dialog_Show(playerid, CarOptions, DIALOG_STYLE_LIST, "Dealership Vehicle", "Set Price (%s)\nRemove Vehicle", "Selecionar", "Cancelar", FormatNumber(DealershipCars[id][index][vehPrice]));
 			}
 	    }
 	}
@@ -21844,7 +21832,7 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
 	            	return SendErrorMessage(playerid, "This vehicle is already sold at this dealership.");
 			}
 			PlayerData[playerid][pDealerCar] = modelid;
-			Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Submit", "Cancel", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
+			Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Enviar", "Cancelar", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
 		}
 	}
 	if ((response) && (extraid == MODEL_SELECTION_BUY_CAR))
@@ -21914,7 +21902,7 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
 	}
 	if ((response) && (extraid == MODEL_SELECTION_SKINS))
 	{
-	    Dialog_Show(playerid, FactionSkin, DIALOG_STYLE_LIST, "Edit Skin", "Add by Model ID\nAdd by Thumbnail\nClear Slot", "Select", "Cancel");
+	    Dialog_Show(playerid, FactionSkin, DIALOG_STYLE_LIST, "Edit Skin", "Add by Model ID\nAdd by Thumbnail\nClear Slot", "Selecionar", "Cancelar");
 	    PlayerData[playerid][pSelectedSlot] = index;
 	}
 	if ((response) && (extraid == MODEL_SELECTION_ADD_SKIN))
@@ -22011,13 +21999,13 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 			}
 			else if (playertextid == PlayerData[playerid][pTextdraws][19]) {
 			    CancelSelectTextDraw(playerid);
-			    Dialog_Show(playerid, Gender, DIALOG_STYLE_LIST, "Gender", "Male\nFemale", "Select", "Cancel");
+			    Dialog_Show(playerid, Gender, DIALOG_STYLE_LIST, "Gender", "Male\nFemale", "Selecionar", "Cancelar");
 			}
 			else if (playertextid == PlayerData[playerid][pTextdraws][20]) {
-			    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Please enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+			    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Please enter your date of birth below (DD/MM/YYYY):", "Enviar", "Cancelar");
 			}
             else if (playertextid == PlayerData[playerid][pTextdraws][21]) {
-			    Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Please enter the geographical origin of your character below:", "Submit", "Cancel");
+			    Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Please enter the geographical origin of your character below:", "Enviar", "Cancelar");
 			}
 			else if (playertextid == PlayerData[playerid][pTextdraws][22])
 			{
@@ -22108,7 +22096,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 				CancelSelectTextDraw(playerid);
 
 				format(string, sizeof(string), "%s\n%s\n%s", (!PlayerCharacters[playerid][0][0]) ? ("Empty Slot") : (PlayerCharacters[playerid][0]), (!PlayerCharacters[playerid][1][0]) ? ("Empty Slot") : (PlayerCharacters[playerid][1]), (!PlayerCharacters[playerid][2][0]) ? ("Empty Slot") : (PlayerCharacters[playerid][2]));
-				Dialog_Show(playerid, CharList, DIALOG_STYLE_LIST, "My Characters", string, "Select", "Cancel");
+				Dialog_Show(playerid, CharList, DIALOG_STYLE_LIST, "My Characters", string, "Selecionar", "Cancelar");
 			}
 			else if (playertextid == PlayerData[playerid][pTextdraws][48])
 			{
@@ -22278,11 +22266,11 @@ Dialog:MyBillboardUnrent(playerid, response, listitem, inputtext[]) {
 
 		GiveMoney(playerid, BillBoardData[bbid][bbPrice]/2);
 		BillBoardData[bbid][bbOwner] = 0;
-		format(BillBoardData[PlayerData[playerid][pOwnsBillboard]][bbMessage], 230, "Not Owned");
+		format(BillBoardData[PlayerData[playerid][pOwnsBillboard]][bbMessage], 230, "Sem Dono");
 		Billboard_Save(bbid);
 		Billboard_Refresh(bbid);
 		PlayerData[playerid][pOwnsBillboard] = -1;
-		SendClientMessageEx(playerid, COLOR_LIGHTYELLOW, "You have unrented your billboard");
+		SendClientMessageEx(playerid, COLOR_LIGHTYELLOW, "Você cancelou o aluguel do outdoor.");
 	}
 	return 1;
 }
@@ -22293,7 +22281,7 @@ Dialog:BillboardRent(playerid, response, listitem, inputtext[]) {
 	    new bbid = BillboardCheckout[playerid];
 	    if(PlayerData[playerid][pBankMoney] < BillBoardData[bbid][bbPrice])
 	    {
-	        SendErrorMessage(playerid, "You do not have enough cash in your bank account for the billboard rental fee");
+	        SendErrorMessage(playerid, "Você não tem dinheiro suficiente em sua conta bancária para pagar a taxa de aluguel do outdoor.");
 	        return 1;
 	    }
 	    else
@@ -22304,7 +22292,7 @@ Dialog:BillboardRent(playerid, response, listitem, inputtext[]) {
 			Tax_AddMoney(BillBoardData[bbid][bbPrice]);
 			Billboard_Save(bbid);
 			Billboard_Refresh(bbid);
-			SendClientMessageEx(playerid, COLOR_LIGHTYELLOW, "You have purchased a billboard, use /mybillboard to edit the message");
+			SendClientMessageEx(playerid, COLOR_LIGHTYELLOW, "Você alugou um outdoor, use /mybillboard para editar a mensagem.");
 		}
 	}
 	return 1;
@@ -22320,7 +22308,7 @@ Dialog:GraffitiColor(playerid, response, listitem, inputtext[])
 		    return 0;
 
 	    if (IsSprayingInProgress(id))
-	        return SendErrorMessage(playerid, "There is another player spraying at this point already.");
+	        return SendErrorMessage(playerid, "Já há outro jogador pichando neste momento.");
 
 	    switch (listitem)
 	    {
@@ -22345,7 +22333,7 @@ Dialog:GraffitiColor(playerid, response, listitem, inputtext[])
 	        case 6:
 	            PlayerData[playerid][pGraffitiColor] = 0xFF1394BF;
 	    }
-	    Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Graffiti Text", "Please enter the text you wish to spray below.\n\nNote: Your text input cannot exceed over 64 characters.", "Submit", "Cancel");
+	    Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Texto de Grafite", "Por favor, insira o texto que deseja pichar abaixo.\n\nNota: O seu texto não pode exceder 64 caracteres.", "Enviar", "Cancelar");
 	}
 	return 1;
 }
@@ -22360,13 +22348,13 @@ Dialog:GraffitiText(playerid, response, listitem, inputtext[])
 		    return 0;
 
 	    if (isnull(inputtext))
-	        return Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Graffiti Text", "Please enter the text you wish to spray below.\n\nNote: Your text input cannot exceed over 64 characters.", "Submit", "Cancel");
+	        return Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Texto de Grafite", "Por favor, insira o texto que deseja pichar abaixo.\n\nNota: O seu texto não pode exceder 64 caracteres.", "Enviar", "Cancelar");
 
 		if (strlen(inputtext) > 64)
-		    return Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Graffiti Text", "Error: Your input can't exceed 64 characters.\n\nPlease enter the text you wish to spray below.\n\nNote: Your text input cannot exceed over 64 characters.", "Submit", "Cancel");
+		    return Dialog_Show(playerid, GraffitiText, DIALOG_STYLE_INPUT, "Texto de Grafite", "Erro: O seu texto não pode exceder 64 caracteres.\n\nPor favor, insira o texto que deseja pichar abaixo.\n\nNota: O seu texto não pode exceder 64 caracteres.", "Enviar", "Cancelar");
 
         if (IsSprayingInProgress(id))
-	        return SendErrorMessage(playerid, "There is another player spraying at this point already.");
+	        return SendErrorMessage(playerid, "Já há outro jogador pichando neste momento.");
 
         PlayerData[playerid][pGraffiti] = id;
         PlayerData[playerid][pGraffitiTime] = 15;
@@ -22377,7 +22365,7 @@ Dialog:GraffitiText(playerid, response, listitem, inputtext[])
 		ShowPlayerFooter(playerid, "You are now spraying your ~g~graffiti.");
 		GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~n~~b~Spraying...~w~ please wait!", 15000, 3);
 
-		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s takes out a can of spray paint and sprays the wall.", ReturnName(playerid, 0));
+		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s pega uma lata de tinta spray e picha a parede.", ReturnName(playerid, 0));
 	}
 	return 1;
 }
@@ -22389,31 +22377,31 @@ Dialog:Radio(playerid, response, listitem, inputtext[])
 	    switch (listitem)
 	    {
 	        case 0:
-	            Dialog_Show(playerid, CulturalRadio, DIALOG_STYLE_LIST, "Cultural", "Classical\nInstruments", "Select", "Cancel");
+	            Dialog_Show(playerid, CulturalRadio, DIALOG_STYLE_LIST, "Cultural", "Classical\nInstruments", "Selecionar", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, OldiesRadio, DIALOG_STYLE_LIST, "Oldies", "70's\n80's\n90's", "Select", "Cancel");
+			    Dialog_Show(playerid, OldiesRadio, DIALOG_STYLE_LIST, "Oldies", "70's\n80's\n90's", "Selecionar", "Cancelar");
 
 			case 2:
-			    Dialog_Show(playerid, OtherRadio, DIALOG_STYLE_LIST, "Other", "Dance\nGlee\nMash Ups", "Select", "Cancel");
+			    Dialog_Show(playerid, OtherRadio, DIALOG_STYLE_LIST, "Other", "Dance\nGlee\nMash Ups", "Selecionar", "Cancelar");
 
 			case 3:
-			    Dialog_Show(playerid, PopRadio, DIALOG_STYLE_LIST, "Pop", "Korean\nPop\nTop Hits", "Select", "Cancel");
+			    Dialog_Show(playerid, PopRadio, DIALOG_STYLE_LIST, "Pop", "Korean\nPop\nTop Hits", "Selecionar", "Cancelar");
 
 			case 4:
-			    Dialog_Show(playerid, RNBRadio, DIALOG_STYLE_LIST, "Rhythm & Blues", "R&B\nSoul", "Select", "Cancel");
+			    Dialog_Show(playerid, RNBRadio, DIALOG_STYLE_LIST, "Rhythm & Blues", "R&B\nSoul", "Selecionar", "Cancelar");
 
 			case 5:
-				Dialog_Show(playerid, RockRadio, DIALOG_STYLE_LIST, "Rock", "Alternative\nClassic\nIndie Rock\nMetal\nPunk\nRock & Roll", "Select", "Cancel");
+				Dialog_Show(playerid, RockRadio, DIALOG_STYLE_LIST, "Rock", "Alternative\nClassic\nIndie Rock\nMetal\nPunk\nRock & Roll", "Selecionar", "Cancelar");
 
 	        case 6:
-	            Dialog_Show(playerid, TalkRadio, DIALOG_STYLE_LIST, "Talk", "Comedy\nScanners", "Select", "Cancel");
+	            Dialog_Show(playerid, TalkRadio, DIALOG_STYLE_LIST, "Talk", "Comedy\nScanners", "Selecionar", "Cancelar");
 
 	 		case 7:
-				Dialog_Show(playerid, UrbanRadio, DIALOG_STYLE_LIST, "Urban", "Country\nHip-Hop", "Select", "Cancel");
+				Dialog_Show(playerid, UrbanRadio, DIALOG_STYLE_LIST, "Urban", "Country\nHip-Hop", "Selecionar", "Cancelar");
 
 			case 8:
-			    Dialog_Show(playerid, ElectricRadio, DIALOG_STYLE_LIST, "Electric", "ElectricFM.com\n1Dance.fm\nDanceTime.fm", "Select", "Cancel");
+			    Dialog_Show(playerid, ElectricRadio, DIALOG_STYLE_LIST, "Electric", "ElectricFM.com\n1Dance.fm\nDanceTime.fm", "Selecionar", "Cancelar");
 
 			case 9:
 			{
@@ -22423,7 +22411,7 @@ Dialog:Radio(playerid, response, listitem, inputtext[])
 			        return 0;
 
 				StopVehicleRadio(vehicleid);
-				SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has turned off the car radio.", ReturnName(playerid, 0));
+				SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s desliga o rádio do carro.", ReturnName(playerid, 0));
 			}
 	    }
 	}
@@ -22442,10 +22430,10 @@ Dialog:UrbanRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-			    Dialog_Show(playerid, Country, DIALOG_STYLE_LIST, "Country", "GotRadio - Today's Country\n181.fm - Highway 181\nHPR1: Traditional Classic Country\nCountry - Sky.fm", "Play", "Cancel");
+			    Dialog_Show(playerid, Country, DIALOG_STYLE_LIST, "Country", "GotRadio - Today's Country\n181.fm - Highway 181\nHPR1: Traditional Classic Country\nCountry - Sky.fm", "Play", "Cancelar");
 
             case 1:
-			    Dialog_Show(playerid, HipHop, DIALOG_STYLE_LIST, "Hip-Hop", "100Hits - HipHop\nHot 108 Jamz\n181.fm - The Box\nGotRadio - Urban Jams", "Play", "Cancel");
+			    Dialog_Show(playerid, HipHop, DIALOG_STYLE_LIST, "Hip-Hop", "100Hits - HipHop\nHot 108 Jamz\n181.fm - The Box\nGotRadio - Urban Jams", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -22541,10 +22529,10 @@ Dialog:TalkRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-			    Dialog_Show(playerid, Comedy, DIALOG_STYLE_LIST, "Comedy", "Comedy104\nAddictedToRadio.com - Comedy\n181.fm - Comedy Club", "Play", "Cancel");
+			    Dialog_Show(playerid, Comedy, DIALOG_STYLE_LIST, "Comedy", "Comedy104\nAddictedToRadio.com - Comedy\n181.fm - Comedy Club", "Play", "Cancelar");
 
             case 1:
-			    Dialog_Show(playerid, Scanners, DIALOG_STYLE_LIST, "Scanners", "New Orleans Police Department\nSan Diego Police Dispatch\nLong Beach Police Dispatch\nCalifornia Highway Patrol - Los Angeles & Orange County\nLAPD - Citywide Dispatch and Hot Shots/Code 3", "Play", "Cancel");
+			    Dialog_Show(playerid, Scanners, DIALOG_STYLE_LIST, "Scanners", "New Orleans Police Department\nSan Diego Police Dispatch\nLong Beach Police Dispatch\nCalifornia Highway Patrol - Los Angeles & Orange County\nLAPD - Citywide Dispatch and Hot Shots/Code 3", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -22616,22 +22604,22 @@ Dialog:RockRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 			case 0:
-			    Dialog_Show(playerid, Alternative, DIALOG_STYLE_LIST, "Alternative", "GotRadio - Alternative", "Play", "Cancel");
+			    Dialog_Show(playerid, Alternative, DIALOG_STYLE_LIST, "Alternative", "GotRadio - Alternative", "Play", "Cancelar");
 
             case 1:
-			    Dialog_Show(playerid, Classic, DIALOG_STYLE_LIST, "Classic", "181.FM - Rock 181 #1\n.977 The Classic Rock\n181.fm - The Eagle\n181.fm Rock 40\n181.fm Rock 181 #2", "Play", "Cancel");
+			    Dialog_Show(playerid, Classic, DIALOG_STYLE_LIST, "Classic", "181.FM - Rock 181 #1\n.977 The Classic Rock\n181.fm - The Eagle\n181.fm Rock 40\n181.fm Rock 181 #2", "Play", "Cancelar");
 
             case 2:
-			    Dialog_Show(playerid, IndieRock, DIALOG_STYLE_LIST, "Indie Rock", "GotRadio - Indie Underground\nIndie Rock - LifeJive.com", "Play", "Cancel");
+			    Dialog_Show(playerid, IndieRock, DIALOG_STYLE_LIST, "Indie Rock", "GotRadio - Indie Underground\nIndie Rock - LifeJive.com", "Play", "Cancelar");
 
             case 3:
-			    Dialog_Show(playerid, Metal, DIALOG_STYLE_LIST, "Metal", "GotRadio - Metal Madness\nDepressive Metal Rock radio\nDeath.F(ucking)M(etal)\nDepressive metal rock (Death)\nRepressive metal rock radio (Black)", "Play", "Cancel");
+			    Dialog_Show(playerid, Metal, DIALOG_STYLE_LIST, "Metal", "GotRadio - Metal Madness\nDepressive Metal Rock radio\nDeath.F(ucking)M(etal)\nDepressive metal rock (Death)\nRepressive metal rock radio (Black)", "Play", "Cancelar");
 
             case 4:
-			    Dialog_Show(playerid, Punk, DIALOG_STYLE_LIST, "Punk", "Pop Punk - Sky.fm", "Play", "Cancel");
+			    Dialog_Show(playerid, Punk, DIALOG_STYLE_LIST, "Punk", "Pop Punk - Sky.fm", "Play", "Cancelar");
 
             case 5:
-			    Dialog_Show(playerid, RockRoll, DIALOG_STYLE_LIST, "Rock & Roll", "Absolute Radio", "Play", "Cancel");
+			    Dialog_Show(playerid, RockRoll, DIALOG_STYLE_LIST, "Rock & Roll", "Absolute Radio", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -22784,10 +22772,10 @@ Dialog:RNBRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 			case 0:
-			    Dialog_Show(playerid, RNB, DIALOG_STYLE_LIST, "R&B", "181.fm - True R&B\nDEFJay.de - 100% R&B\nGotRadio - R&B Classics\nSlow Jamz\nAddictedToRadio.com - V101 RnB AAC", "Play", "Cancel");
+			    Dialog_Show(playerid, RNB, DIALOG_STYLE_LIST, "R&B", "181.fm - True R&B\nDEFJay.de - 100% R&B\nGotRadio - R&B Classics\nSlow Jamz\nAddictedToRadio.com - V101 RnB AAC", "Play", "Cancelar");
 
             case 1:
-			    Dialog_Show(playerid, SoulRadio, DIALOG_STYLE_LIST, "Soul", "181.fm - Soul\nSoulful Bits", "Play", "Cancel");
+			    Dialog_Show(playerid, SoulRadio, DIALOG_STYLE_LIST, "Soul", "181.fm - Soul\nSoulful Bits", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -22856,13 +22844,13 @@ Dialog:PopRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-		        Dialog_Show(playerid, KoreanRadio, DIALOG_STYLE_LIST, "Korean", "KPOP TOP 100\nGeneraction\nBig B Radio", "Play", "Cancel");
+		        Dialog_Show(playerid, KoreanRadio, DIALOG_STYLE_LIST, "Korean", "KPOP TOP 100\nGeneraction\nBig B Radio", "Play", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, Pop, DIALOG_STYLE_LIST, "Pop", "My Tunes FM\nHot Hits IR\nGay FM", "Play", "Cancel");
+			    Dialog_Show(playerid, Pop, DIALOG_STYLE_LIST, "Pop", "My Tunes FM\nHot Hits IR\nGay FM", "Play", "Cancelar");
 
             case 2:
-			    Dialog_Show(playerid, TopHits, DIALOG_STYLE_LIST, "Top Hits", "ChartHits.fm - Your Hitz More Music\n181.fm The Office\n100Hitz - Top 40\n1.fm Absolute Top 40\nTop Hits Music - Sky.fm", "Play", "Cancel");
+			    Dialog_Show(playerid, TopHits, DIALOG_STYLE_LIST, "Top Hits", "ChartHits.fm - Your Hitz More Music\n181.fm The Office\n100Hitz - Top 40\n1.fm Absolute Top 40\nTop Hits Music - Sky.fm", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -22958,13 +22946,13 @@ Dialog:OtherRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-		        Dialog_Show(playerid, DanceRadio, DIALOG_STYLE_LIST, "Dance", "Dancetime.fm\nPlus Fm - Pure Dance Radio", "Play", "Cancel");
+		        Dialog_Show(playerid, DanceRadio, DIALOG_STYLE_LIST, "Dance", "Dancetime.fm\nPlus Fm - Pure Dance Radio", "Play", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, Glee, DIALOG_STYLE_LIST, "Glee", "AceRadio.net - Glee Radio", "Play", "Cancel");
+			    Dialog_Show(playerid, Glee, DIALOG_STYLE_LIST, "Glee", "AceRadio.net - Glee Radio", "Play", "Cancelar");
 
             case 2:
-			    Dialog_Show(playerid, MashUps, DIALOG_STYLE_LIST, "Mash Ups", "Mastermix - Base Manic Radio\nMashups\nGotRadio - Mashups\nMashup-Radio24.de\nI love mashup radio", "Play", "Cancel");
+			    Dialog_Show(playerid, MashUps, DIALOG_STYLE_LIST, "Mash Ups", "Mastermix - Base Manic Radio\nMashups\nGotRadio - Mashups\nMashup-Radio24.de\nI love mashup radio", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -23051,13 +23039,13 @@ Dialog:OldiesRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-		        Dialog_Show(playerid, 70sRadio, DIALOG_STYLE_LIST, "70's", "181.fm - 70's\nAll Hit 70's\nSky.fm", "Play", "Cancel");
+		        Dialog_Show(playerid, 70sRadio, DIALOG_STYLE_LIST, "70's", "181.fm - 70's\nAll Hit 70's\nSky.fm", "Play", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, 80sRadio, DIALOG_STYLE_LIST, "80's", "Golden Radio Italia 80's\n181.fm - Lite 80's\n181.fm - Awesome 80's\n80's, 80's, 80's! - Sky.fm", "Play", "Cancel");
+			    Dialog_Show(playerid, 80sRadio, DIALOG_STYLE_LIST, "80's", "Golden Radio Italia 80's\n181.fm - Lite 80's\n181.fm - Awesome 80's\n80's, 80's, 80's! - Sky.fm", "Play", "Cancelar");
 
             case 2:
-			    Dialog_Show(playerid, 90sRadio, DIALOG_STYLE_LIST, "90's", "GotRadio - 90's Alternative\nAddictedToRadio.com\n181.fm - Lite 90's\n181.fm - 90's Alternative\n181.fm - Star 90's", "Play", "Cancel");
+			    Dialog_Show(playerid, 90sRadio, DIALOG_STYLE_LIST, "90's", "GotRadio - 90's Alternative\nAddictedToRadio.com\n181.fm - Lite 90's\n181.fm - 90's Alternative\n181.fm - Star 90's", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -23153,10 +23141,10 @@ Dialog:CulturalRadio(playerid, response, listitem, inputtext[])
 		switch (listitem)
 		{
 		    case 0:
-		        Dialog_Show(playerid, Classical, DIALOG_STYLE_LIST, "Classical", "Mostly Classical - Sky.fm\nCalmradio.com - Mozart\n1.fm - Otto's classical\nClassical Piano - Sky.fm", "Play", "Cancel");
+		        Dialog_Show(playerid, Classical, DIALOG_STYLE_LIST, "Classical", "Mostly Classical - Sky.fm\nCalmradio.com - Mozart\n1.fm - Otto's classical\nClassical Piano - Sky.fm", "Play", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, Instruments, DIALOG_STYLE_LIST, "Instruments", "Calmradio.com - Solo Piano & Guitar\nGotRadio - Guitar Genius\nGotRadio - Piano Perfect\nPianorama", "Play", "Cancel");
+			    Dialog_Show(playerid, Instruments, DIALOG_STYLE_LIST, "Instruments", "Calmradio.com - Solo Piano & Guitar\nGotRadio - Guitar Genius\nGotRadio - Piano Perfect\nPianorama", "Play", "Cancelar");
 		}
 	}
 	return 1;
@@ -23324,10 +23312,10 @@ Dialog:GatePass(playerid, response, listitem, inputtext[])
 	        return 0;
 
         if (isnull(inputtext))
-        	return Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Please enter the password for this gate below:", "Submit", "Cancel");
+        	return Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Please enter the password for this gate below:", "Enviar", "Cancelar");
 
 		if (strcmp(inputtext, GateData[id][gatePass]) != 0)
-  			return Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Error: Incorrect password specified.\n\nPlease enter the password for this gate below:", "Submit", "Cancel");
+  			return Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Error: Incorrect password specified.\n\nPlease enter the password for this gate below:", "Enviar", "Cancelar");
 
 		Gate_Operate(id);
 	}
@@ -23627,7 +23615,7 @@ Dialog:TuneVehicle(playerid, response, listitem, inputtext[])
 	            ShowModelSelectionMenu(playerid, "Add Wheels", MODEL_SELECTION_WHEELS, {1025, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1096, 1097, 1098}, 17, 0.0, 0.0, 90.0);
 
 			case 1:
-			    Dialog_Show(playerid, AddNOS, DIALOG_STYLE_LIST, "Add Nitrous", "2x NOS\n5x NOS\n10x NOS", "Select", "Cancel");
+			    Dialog_Show(playerid, AddNOS, DIALOG_STYLE_LIST, "Add Nitrous", "2x NOS\n5x NOS\n10x NOS", "Selecionar", "Cancelar");
 
 			case 2:
 			{
@@ -23746,16 +23734,16 @@ Dialog:GiveItem(playerid, response, listitem, inputtext[])
 			string[32];
 
 		if (sscanf(inputtext, "u", userid))
-		    return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Please enter the name or the ID of the player:", "Submit", "Cancel");
+		    return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Please enter the name or the ID of the player:", "Enviar", "Cancelar");
 
 		if (userid == INVALID_PLAYER_ID)
-		    return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: Invalid player specified.\n\nPlease enter the name or the ID of the player:", "Submit", "Cancel");
+		    return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: Invalid player specified.\n\nPlease enter the name or the ID of the player:", "Enviar", "Cancelar");
 
 	    if (!IsPlayerNearPlayer(playerid, userid, 6.0))
-			return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: You are not near that player.\n\nPlease enter the name or the ID of the player:", "Submit", "Cancel");
+			return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: You are not near that player.\n\nPlease enter the name or the ID of the player:", "Enviar", "Cancelar");
 
 	    if (userid == playerid)
-			return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: You can't give items to yourself.\n\nPlease enter the name or the ID of the player:", "Submit", "Cancel");
+			return Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Error: You can't give items to yourself.\n\nPlease enter the name or the ID of the player:", "Enviar", "Cancelar");
 
 		itemid = PlayerData[playerid][pInventoryItem];
 
@@ -24068,16 +24056,16 @@ Dialog:MainGPS(playerid, response, listitem, inputtext[])
 	    switch (listitem)
 	    {
 	        case 0:
-	            Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Please enter the address of the house below:", "Submit", "Cancel");
+	            Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Please enter the address of the house below:", "Enviar", "Cancelar");
 
 			case 1:
-			    Dialog_Show(playerid, FindBusiness, DIALOG_STYLE_LIST, "Find Business", "Retail Store\nWeapon Store\nClothing Store\nFast Food\nDealership\nGas Station\nFurniture Store", "Submit", "Cancel");
+			    Dialog_Show(playerid, FindBusiness, DIALOG_STYLE_LIST, "Find Business", "Retail Store\nWeapon Store\nClothing Store\nFast Food\nDealership\nGas Station\nFurniture Store", "Enviar", "Cancelar");
 
 			case 2:
-			    Dialog_Show(playerid, FindEntrance, DIALOG_STYLE_LIST, "Find Entrance", "Nearest DMV\nNearest Bank\nNearest Warehouse\nNearest City Hall", "Select", "Cancel");
+			    Dialog_Show(playerid, FindEntrance, DIALOG_STYLE_LIST, "Find Entrance", "Nearest DMV\nNearest Bank\nNearest Warehouse\nNearest City Hall", "Selecionar", "Cancelar");
 
 			case 3:
-			    Dialog_Show(playerid, FindJob, DIALOG_STYLE_LIST, "Find Job", "Courier\nMechanic\nTaxi Driver\nCargo Unloader\nMiner\nFood Vendor\nGarbage Man\nPackage Sorter", "Select", "Cancel");
+			    Dialog_Show(playerid, FindJob, DIALOG_STYLE_LIST, "Find Job", "Courier\nMechanic\nTaxi Driver\nCargo Unloader\nMiner\nFood Vendor\nGarbage Man\nPackage Sorter", "Selecionar", "Cancelar");
 
 			case 4:
 			{
@@ -24101,7 +24089,7 @@ Dialog:FindHouse(playerid, response, listitem, inputtext[])
 	if (response)
 	{
 		if (isnull(inputtext) || strlen(inputtext) > 32)
-		    return Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Please enter the address of the house below:", "Submit", "Cancel");
+		    return Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Please enter the address of the house below:", "Enviar", "Cancelar");
 
 		for (new i = 0; i != MAX_HOUSES; i ++)
 		{
@@ -24111,7 +24099,7 @@ Dialog:FindHouse(playerid, response, listitem, inputtext[])
 	        	return SendServerMessage(playerid, "Waypoint set to \"%s\" (marked on radar).", HouseData[i][houseAddress]);
 			}
 		}
-        Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Error: No results found for \"%s\".\n\nPlease enter the address of the house below:", "Submit", "Cancel", inputtext);
+        Dialog_Show(playerid, FindHouse, DIALOG_STYLE_INPUT, "Find House", "Error: No results found for \"%s\".\n\nPlease enter the address of the house below:", "Enviar", "Cancelar", inputtext);
 	}
 	else cmd_gps(playerid, "\1");
 	return 1;
@@ -24187,7 +24175,7 @@ Dialog:CustomLocations(playerid, response, listitem, inputtext[])
 	if (response)
 	{
 	    if (!listitem) {
-			Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Please enter the desired name of the location below:", "Submit", "Cancel");
+			Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Please enter the desired name of the location below:", "Enviar", "Cancelar");
 	    }
 	    else
 		{
@@ -24209,10 +24197,10 @@ Dialog:AddLocation(playerid, response, listitem, inputtext[])
 	if (response)
 	{
 	    if (isnull(inputtext))
-	        return Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Please enter the desired name of the location below:", "Submit", "Cancel");
+	        return Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Please enter the desired name of the location below:", "Enviar", "Cancelar");
 
 		if (strlen(inputtext) > 32)
-		    return Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Error: The name can't exceed 32 characters.\n\nPlease enter the desired name of the location below:", "Submit", "Cancel");
+		    return Dialog_Show(playerid, AddLocation, DIALOG_STYLE_INPUT, "Add Location", "Error: The name can't exceed 32 characters.\n\nPlease enter the desired name of the location below:", "Enviar", "Cancelar");
 
 		static
 		    Float:fX,
@@ -24503,7 +24491,7 @@ Dialog:Locker(playerid, response, listitem, inputtext[])
 
 						else format(string, sizeof(string), "%sEmpty Slot\n", string);
 				    }
-				    Dialog_Show(playerid, LockerWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Select", "Cancel");
+				    Dialog_Show(playerid, LockerWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Selecionar", "Cancelar");
 				}
 			}
 	    }
@@ -24530,7 +24518,7 @@ Dialog:Locker(playerid, response, listitem, inputtext[])
 
 						else format(string, sizeof(string), "%sEmpty Slot\n", string);
 				    }
-				    Dialog_Show(playerid, LockerWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Select", "Cancel");
+				    Dialog_Show(playerid, LockerWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Selecionar", "Cancelar");
 				}
 			}
 	    }
@@ -24637,7 +24625,7 @@ Dialog:FactionLocker(playerid, response, listitem, inputtext[])
 
 					else format(string, sizeof(string), "%sEmpty Slot\n", string);
 			    }
-			    Dialog_Show(playerid, FactionWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Select", "Cancel");
+			    Dialog_Show(playerid, FactionWeapons, DIALOG_STYLE_LIST, "Locker Weapons", string, "Selecionar", "Cancelar");
 			}
 		}
 	}
@@ -24652,7 +24640,7 @@ Dialog:FactionWeapons(playerid, response, listitem, inputtext[])
 	if (response)
 	{
 	    PlayerData[playerid][pSelectedSlot] = listitem;
-	    Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Select", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
+	    Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Selecionar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
 	}
 	return 1;
 }
@@ -24667,10 +24655,10 @@ Dialog:FactionWeapon(playerid, response, listitem, inputtext[])
 	    switch (listitem)
 	    {
 	        case 0:
-	        	Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Current Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Submit", "Cancel", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+	        	Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Current Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Enviar", "Cancelar", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
 			case 1:
-	            Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Current Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Submit", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+	            Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Current Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Enviar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
 			case 2:
 			{
@@ -24700,15 +24688,15 @@ Dialog:FactionWeaponID(playerid, response, listitem, inputtext[])
 	    new weaponid = strval(inputtext);
 
 	    if (isnull(inputtext))
-	        return Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Current Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Submit", "Cancel", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+	        return Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Current Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Enviar", "Cancelar", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
 		if (weaponid < 0 || weaponid > 46)
-		    return Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Error: The weapon ID can't be below 0 or above 46.\n\nCurrent Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Submit", "Cancel", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+		    return Dialog_Show(playerid, FactionWeaponID, DIALOG_STYLE_INPUT, "Set Weapon", "Error: The weapon ID can't be below 0 or above 46.\n\nCurrent Weapon: %s (%d)\n\nPlease enter the new weapon ID for slot %d:", "Enviar", "Cancelar", ReturnWeaponName(FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]]), FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
         FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]] = weaponid;
         Faction_Save(PlayerData[playerid][pFactionEdit]);
 
-		Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Select", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
+		Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Selecionar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
 
 	    if (weaponid) {
 		    SendServerMessage(playerid, "You have set the weapon in slot %d to %s.", PlayerData[playerid][pSelectedSlot] + 1, ReturnWeaponName(weaponid));
@@ -24730,15 +24718,15 @@ Dialog:FactionWeaponAmmo(playerid, response, listitem, inputtext[])
 	    new ammo = strval(inputtext);
 
 	    if (isnull(inputtext))
-	        return Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Current Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Submit", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+	        return Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Current Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Enviar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
 		if (ammo < 1 || ammo > 15000)
-		    return Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Error: The ammo can't be below 1 or above 15,000.\n\nCurrent Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Submit", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
+		    return Dialog_Show(playerid, FactionWeaponAmmo, DIALOG_STYLE_INPUT, "Set Ammunition", "Error: The ammo can't be below 1 or above 15,000.\n\nCurrent Ammo: %d\n\nPlease enter the new ammunition for the weapon in slot %d:", "Enviar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]], PlayerData[playerid][pSelectedSlot]);
 
         FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]] = ammo;
         Faction_Save(PlayerData[playerid][pFactionEdit]);
 
-		Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Select", "Cancel", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
+		Dialog_Show(playerid, FactionWeapon, DIALOG_STYLE_LIST, "Edit Weapon", "Set Weapon (%d)\nSet Ammunition (%d)\nClear Slot", "Selecionar", "Cancelar", FactionData[PlayerData[playerid][pFactionEdit]][factionWeapons][PlayerData[playerid][pSelectedSlot]], FactionData[PlayerData[playerid][pFactionEdit]][factionAmmo][PlayerData[playerid][pSelectedSlot]]);
 		SendServerMessage(playerid, "You have set the ammunition in slot %d to %d.", PlayerData[playerid][pSelectedSlot] + 1, ammo);
 	}
 	return 1;
@@ -24823,31 +24811,31 @@ Dialog:JobList(playerid, response, listitem, inputtext[])
 	    switch (listitem)
 	    {
 	        case 0:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Courier Job", "{FFFFFF}The {FF6347}Courier{FFFFFF} job allows players to deliver products to businesses.\nUse {FF6347}/startdelivery{FFFFFF} to begin loading and {FF6347}/unload{FFFFFF} to unload the goods.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Courier Job", "{FFFFFF}The {FF6347}Courier{FFFFFF} job allows players to deliver products to businesses.\nUse {FF6347}/startdelivery{FFFFFF} to begin loading and {FF6347}/unload{FFFFFF} to unload the goods.", "Fechar", "Back");
 
 			case 1:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Mechanic Job", "{FFFFFF}The {FF6347}Mechanic{FFFFFF} job allows players to repair totalled vehicles.\nUse {FF6347}/hood{FFFFFF} to open the hood and {FF6347}/repair{FFFFFF} to repair the vehicle.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Mechanic Job", "{FFFFFF}The {FF6347}Mechanic{FFFFFF} job allows players to repair totalled vehicles.\nUse {FF6347}/hood{FFFFFF} to open the hood and {FF6347}/repair{FFFFFF} to repair the vehicle.", "Fechar", "Back");
 
             case 2:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Taxi Driver Job", "{FFFFFF}The {FF6347}Taxi Driver{FFFFFF} job allows players to transport other players.\nUse {FF6347}/taxi{FFFFFF} whilst inside a taxi cab to go on taxi duty.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Taxi Driver Job", "{FFFFFF}The {FF6347}Taxi Driver{FFFFFF} job allows players to transport other players.\nUse {FF6347}/taxi{FFFFFF} whilst inside a taxi cab to go on taxi duty.", "Fechar", "Back");
 
             case 3:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Cargo Unloader Job", "{FFFFFF}The {FF6347}Cargo Unloader{FFFFFF} job allows players to operate a forklift to move crates.\nUse {FF6347}/loadcrate{FFFFFF} to load a crate and deliver it to the {FF6347}marker{FFFFFF}.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Cargo Unloader Job", "{FFFFFF}The {FF6347}Cargo Unloader{FFFFFF} job allows players to operate a forklift to move crates.\nUse {FF6347}/loadcrate{FFFFFF} to load a crate and deliver it to the {FF6347}marker{FFFFFF}.", "Fechar", "Back");
 
             case 4:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Miner Job", "{FFFFFF}The {FF6347}Miner{FFFFFF} job allows players to mine rocks from the ground.\nUse {FF6347}/mine{FFFFFF} to begin mining and {FF6347}LMB{FFFFFF} to start digging.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Miner Job", "{FFFFFF}The {FF6347}Miner{FFFFFF} job allows players to mine rocks from the ground.\nUse {FF6347}/mine{FFFFFF} to begin mining and {FF6347}LMB{FFFFFF} to start digging.", "Fechar", "Back");
 
         	case 5:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Food Vendor Job", "{FFFFFF}The {FF6347}Food Vendor{FFFFFF} job allows players to sell food items to other players.\nUse {FF6347}/sellfood{FFFFFF} whilst inside a food truck to sell a food item.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Food Vendor Job", "{FFFFFF}The {FF6347}Food Vendor{FFFFFF} job allows players to sell food items to other players.\nUse {FF6347}/sellfood{FFFFFF} whilst inside a food truck to sell a food item.", "Fechar", "Back");
 
             case 6:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Garbage Man Job", "{FFFFFF}The {FF6347}Garbage Man{FFFFFF} job allows players to deliver trash in return for money.\nUse {FF6347}/takebag{FFFFFF} whilst near a garbage bin to load a bag of garbage.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Garbage Man Job", "{FFFFFF}The {FF6347}Garbage Man{FFFFFF} job allows players to deliver trash in return for money.\nUse {FF6347}/takebag{FFFFFF} whilst near a garbage bin to load a bag of garbage.", "Fechar", "Back");
 
             case 7:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Package Sorter Job", "{FFFFFF}The {FF6347}Package Sorter{FFFFFF} job allows players to sort packages for money.\nUse {FF6347}/sorting{FFFFFF} at the required location to begin sorting.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Package Sorter Job", "{FFFFFF}The {FF6347}Package Sorter{FFFFFF} job allows players to sort packages for money.\nUse {FF6347}/sorting{FFFFFF} at the required location to begin sorting.", "Fechar", "Back");
 
             case 8:
-	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Weapon Smuggler Job", "{FFFFFF}The {FF6347}Weapon Smuggler{FFFFFF} job allows players to smuggle weapons from weapon crates.\nUse {FF6347}/craftparts{FFFFFF} whilst carrying a weapon crate to smuggle the parts.", "Close", "Back");
+	            Dialog_Show(playerid, JobHelp, DIALOG_STYLE_MSGBOX, "Weapon Smuggler Job", "{FFFFFF}The {FF6347}Weapon Smuggler{FFFFFF} job allows players to smuggle weapons from weapon crates.\nUse {FF6347}/craftparts{FFFFFF} whilst carrying a weapon crate to smuggle the parts.", "Fechar", "Back");
 
 	    }
 	}
@@ -24907,7 +24895,7 @@ Dialog:AddVehicleModel(playerid, response, listitem, inputtext[])
 	            	return Dialog_Show(playerid, AddVehicleModel, DIALOG_STYLE_INPUT, "Add Vehicle", "Error: This model is already sold at this dealership.\n\nPlease enter the name or the ID of the vehicle model:", "Add", "Cancel");
 			}
 			PlayerData[playerid][pDealerCar] = model;
-			Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Submit", "Cancel", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
+			Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Enviar", "Cancelar", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
 	    }
 	}
 	return 1;
@@ -25180,7 +25168,7 @@ Dialog:ListedFurniture(playerid, response, listitem, inputtext[])
 	    {
 	        PlayerData[playerid][pEditFurniture] = ListedFurniture[playerid][listitem];
 
-			Dialog_Show(playerid, FurnitureList, DIALOG_STYLE_LIST, FurnitureData[PlayerData[playerid][pEditFurniture]][furnitureName], "Edit Position\nPickup Furniture\nDestroy Furniture", "Select", "Cancel");
+			Dialog_Show(playerid, FurnitureList, DIALOG_STYLE_LIST, FurnitureData[PlayerData[playerid][pEditFurniture]][furnitureName], "Edit Position\nPickup Furniture\nDestroy Furniture", "Selecionar", "Cancelar");
 	    }
 	}
 	for (new i = 0; i != MAX_FURNITURE; i ++) {
@@ -25338,7 +25326,7 @@ Dialog:DealerCarPrice(playerid, response, listitem, inputtext[])
 	    if (id != -1 && BusinessData[id][bizExists] && BusinessData[id][bizType] == 5)
 	    {
 		    if (isnull(inputtext) || strval(inputtext) < 1)
-		        return Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Submit", "Cancel", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
+		        return Dialog_Show(playerid, DealerCarPrice, DIALOG_STYLE_INPUT, "Enter Price", "Please enter a price for '%s':", "Enviar", "Cancelar", ReturnVehicleModelName(PlayerData[playerid][pDealerCar]));
 
 		    Business_AddVehicle(id, PlayerData[playerid][pDealerCar], strval(inputtext));
 	        Business_EditCars(playerid, id);
@@ -25359,7 +25347,7 @@ Dialog:CarPrice(playerid, response, listitem, inputtext[])
 	    if (id != -1 && BusinessData[id][bizExists] && BusinessData[id][bizType] == 5)
 	    {
 		    if (isnull(inputtext) || strval(inputtext) < 1)
-		        return Dialog_Show(playerid, CarPrice, DIALOG_STYLE_INPUT, "Set Price", "The current price for '%s' is %s.\n\nPlease enter the new price for this vehicle model below:", "Submit", "Cancel", ReturnVehicleModelName(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehModel]), FormatNumber(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehPrice]));
+		        return Dialog_Show(playerid, CarPrice, DIALOG_STYLE_INPUT, "Set Price", "The current price for '%s' is %s.\n\nPlease enter the new price for this vehicle model below:", "Enviar", "Cancelar", ReturnVehicleModelName(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehModel]), FormatNumber(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehPrice]));
 
 			new
 			    string[128];
@@ -25387,7 +25375,7 @@ Dialog:CarOptions(playerid, response, listitem, inputtext[])
 	    {
 		    if (listitem == 0)
 		    {
-		        Dialog_Show(playerid, CarPrice, DIALOG_STYLE_INPUT, "Set Price", "The current price for '%s' is %s.\n\nPlease enter the new price for this vehicle model below:", "Submit", "Cancel", ReturnVehicleModelName(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehModel]), FormatNumber(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehPrice]));
+		        Dialog_Show(playerid, CarPrice, DIALOG_STYLE_INPUT, "Set Price", "The current price for '%s' is %s.\n\nPlease enter the new price for this vehicle model below:", "Enviar", "Cancelar", ReturnVehicleModelName(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehModel]), FormatNumber(DealershipCars[id][PlayerData[playerid][pDealerCar]][vehPrice]));
 		    }
 		    else if (listitem == 1)
 		    {
@@ -25427,7 +25415,7 @@ Dialog:BankAccount(playerid, response, listitem, inputtext[])
 	}
 	else
 	{
-	    Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s\nSavings Balance: %s", "Select", "Cancel", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
+	    Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s\nSavings Balance: %s", "Selecionar", "Cancelar", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
 	}
 	return 1;
 }
@@ -25514,7 +25502,7 @@ Dialog:Savings(playerid, response, listitem, inputtext[])
 	}
 	else
 	{
-	    Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s\nSavings Balance: %s", "Select", "Cancel", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
+	    Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s\nSavings Balance: %s", "Selecionar", "Cancelar", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
 	}
 	return 1;
 }
@@ -25762,7 +25750,7 @@ Dialog:Inventory(playerid, response, listitem, inputtext[])
 	                return 0;
 
 				PlayerData[playerid][pInventoryItem] = itemid;
-				Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Please enter the name or the ID of the player:", "Submit", "Cancel");
+				Dialog_Show(playerid, GiveItem, DIALOG_STYLE_INPUT, "Give Item", "Please enter the name or the ID of the player:", "Enviar", "Cancelar");
 	        }
 	        case 2:
 	        {
@@ -25981,7 +25969,7 @@ Dialog:BusinessBuy(playerid, response, listitem, inputtext[])
 				    if (PlayerData[playerid][pLottery])
 				        return SendErrorMessage(playerid, "You have a lottery ticket already.");
 
-					Dialog_Show(playerid, LotteryNumber, DIALOG_STYLE_INPUT, "Lottery Number", "Please enter your desired lottery number below (from 1-60):", "Submit", "Cancel");
+					Dialog_Show(playerid, LotteryNumber, DIALOG_STYLE_INPUT, "Lottery Number", "Please enter your desired lottery number below (from 1-60):", "Enviar", "Cancelar");
 				}
 				case 7:
 		        {
@@ -26515,7 +26503,7 @@ Dialog:LotteryNumber(playerid, response, listitem, inputtext[])
 	    if (bizid != -1)
 	    {
 	        if (isnull(inputtext) || (strval(inputtext) < 1 || strval(inputtext) > 60)) {
-	            return Dialog_Show(playerid, LotteryNumber, DIALOG_STYLE_INPUT, "Lottery Number", "Please enter your desired lottery number below (from 1-60):", "Submit", "Cancel");
+	            return Dialog_Show(playerid, LotteryNumber, DIALOG_STYLE_INPUT, "Lottery Number", "Please enter your desired lottery number below (from 1-60):", "Enviar", "Cancelar");
 			}
 	        PlayerData[playerid][pLottery] = strval(inputtext);
 	        PlayerData[playerid][pLotteryB] = 1;
@@ -27238,21 +27226,21 @@ Dialog:Accessory(playerid, response, listitem, inputtext[])
 	            if (!PlayerData[playerid][pGlasses])
 	                return SendErrorMessage(playerid, "You don't own a pair of glasses.");
 
-	            Dialog_Show(playerid, EditGlasses, DIALOG_STYLE_LIST, "Glasses", "Toggle Glasses\nEdit Glasses\nDelete Glasses", "Select", "Cancel");
+	            Dialog_Show(playerid, EditGlasses, DIALOG_STYLE_LIST, "Glasses", "Toggle Glasses\nEdit Glasses\nDelete Glasses", "Selecionar", "Cancelar");
 			}
 			case 1:
 			{
 			    if (!PlayerData[playerid][pHat])
 	                return SendErrorMessage(playerid, "You don't own a hat.");
 
-			    Dialog_Show(playerid, EditHat, DIALOG_STYLE_LIST, "Hat", "Toggle Hat\nEdit Hat\nDelete Hat", "Select", "Cancel");
+			    Dialog_Show(playerid, EditHat, DIALOG_STYLE_LIST, "Hat", "Toggle Hat\nEdit Hat\nDelete Hat", "Selecionar", "Cancelar");
 			}
 			case 2:
 			{
 			    if (!PlayerData[playerid][pBandana])
 	                return SendErrorMessage(playerid, "You don't own a bandana.");
 
-			    Dialog_Show(playerid, EditBandana, DIALOG_STYLE_LIST, "Bandana", "Toggle Bandana\nEdit Bandana\nDelete Bandana", "Select", "Cancel");
+			    Dialog_Show(playerid, EditBandana, DIALOG_STYLE_LIST, "Bandana", "Toggle Bandana\nEdit Bandana\nDelete Bandana", "Selecionar", "Cancelar");
 			}
 		}
 	}
@@ -27413,16 +27401,16 @@ Dialog:DateBirth(playerid, response, listitem, inputtext[])
 	        arrMonthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 	    if (sscanf(inputtext, "p</>ddd", iDay, iMonth, iYear)) {
-	        Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid format specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+	        Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid format specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Enviar", "Cancelar");
 		}
 		else if (iYear < 1900 || iYear > 2014) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid year specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid year specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Enviar", "Cancelar");
 		}
 		else if (iMonth < 1 || iMonth > 12) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid month specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid month specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Enviar", "Cancelar");
 		}
 		else if (iDay < 1 || iDay > arrMonthDays[iMonth - 1]) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid day specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid day specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Enviar", "Cancelar");
 		}
 		else {
 		    format(PlayerData[playerid][pBirthdate], 24, inputtext);
@@ -27441,13 +27429,13 @@ Dialog:Origin(playerid, response, listitem, inputtext[])
 	    new str[64];
 
 	    if (isnull(inputtext) || strlen(inputtext) > 32) {
-	        Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Please enter the geographical origin of your character below:", "Submit", "Cancel");
+	        Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Please enter the geographical origin of your character below:", "Enviar", "Cancelar");
 		}
 		else for (new i = 0, len = strlen(inputtext); i != len; i ++) {
 		    if ((inputtext[i] >= 'A' && inputtext[i] <= 'Z') || (inputtext[i] >= 'a' && inputtext[i] <= 'z') || (inputtext[i] >= '0' && inputtext[i] <= '9') || (inputtext[i] == ' ') || (inputtext[i] == ',') || (inputtext[i] == '.'))
 				continue;
 
-			else return Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Error: Only letters and numbers are accepted in the origin.\n\nPlease enter the geographical origin of your character below:", "Submit", "Cancel");
+			else return Dialog_Show(playerid, Origin, DIALOG_STYLE_INPUT, "Origin", "Error: Only letters and numbers are accepted in the origin.\n\nPlease enter the geographical origin of your character below:", "Enviar", "Cancelar");
 		}
 		format(PlayerData[playerid][pOrigin], 32, inputtext);
 
@@ -27825,7 +27813,7 @@ CMD:help(playerid, params[])
 
 CMD:changepass(playerid, params[])
 {
-	Dialog_Show(playerid, ChangePassword, DIALOG_STYLE_PASSWORD, "Change Password", "Please enter your existing password below:", "Submit", "Cancel");
+	Dialog_Show(playerid, ChangePassword, DIALOG_STYLE_PASSWORD, "Change Password", "Please enter your existing password below:", "Enviar", "Cancelar");
 	return 1;
 }
 
@@ -28656,7 +28644,7 @@ CMD:ban(playerid, params[])
 		    KickEx(i);
 		}
 	}
-	Dialog_Show(userid, ShowOnly, DIALOG_STYLE_MSGBOX, "Banned", "Your account has been banned by the server.\n\nUsername: %s\nReason: %s\nAdmin who banned you: %s\n\nPress F8 to take a screenshot and request a ban appeal on our forums.", "Close", "", PlayerData[userid][pUsername], reason, ReturnName(playerid, 0));
+	Dialog_Show(userid, ShowOnly, DIALOG_STYLE_MSGBOX, "Banned", "Your account has been banned by the server.\n\nUsername: %s\nReason: %s\nAdmin who banned you: %s\n\nPress F8 to take a screenshot and request a ban appeal on our forums.", "Fechar", "", PlayerData[userid][pUsername], reason, ReturnName(playerid, 0));
 
 	SendClientMessageToAllEx(COLOR_LIGHTRED, "[ADMIN]: %s was banned by %s for: %s.", ReturnName(userid, 0), ReturnName(playerid, 0), reason);
 	Log_Write("logs/ban_log.txt", "[%s] %s was banned by %s for: %s.", ReturnDate(), ReturnName(userid, 0), ReturnName(playerid, 0), reason);
@@ -28715,7 +28703,7 @@ CMD:acc(playerid, params[])
 	    string[128];
 
 	format(string, sizeof(string), "Glasses: %s\nHat: %s\nBandana: %s", (PlayerData[playerid][pGlasses]) ? ("Yes") : ("No"), (PlayerData[playerid][pHat]) ? ("Yes") : ("No"), (PlayerData[playerid][pBandana]) ? ("Yes") : ("No"));
-	Dialog_Show(playerid, Accessory, DIALOG_STYLE_LIST, "Accessories", string, "Select", "Cancel");
+	Dialog_Show(playerid, Accessory, DIALOG_STYLE_LIST, "Accessories", string, "Selecionar", "Cancelar");
 
 	return 1;
 }
@@ -28880,7 +28868,7 @@ CMD:goto(playerid, params[])
 			    strcat(str, g_arrInteriorData[i][e_InteriorName]);
 			    strcat(str, "\n");
 		    }
-		    Dialog_Show(playerid, TeleportInterior, DIALOG_STYLE_LIST, "Teleport: Interior List", str, "Select", "Cancel");
+		    Dialog_Show(playerid, TeleportInterior, DIALOG_STYLE_LIST, "Teleport: Interior List", str, "Selecionar", "Cancelar");
 		    return 1;
 		}
 	    else return SendErrorMessage(playerid, "You have specified an invalid player.");
@@ -30055,7 +30043,7 @@ CMD:lock(playerid, params[])
 	{
 		if (strlen(EntranceData[id][entrancePass]))
 		{
-			Dialog_Show(playerid, EntrancePass, DIALOG_STYLE_INPUT, "Entrance Pass", "Please enter the password for this entrance:", "Submit", "Cancel");
+			Dialog_Show(playerid, EntrancePass, DIALOG_STYLE_INPUT, "Entrance Pass", "Please enter the password for this entrance:", "Enviar", "Cancelar");
 		}
 	}
 	else if ((id = Car_Nearest(playerid)) != -1)
@@ -31468,7 +31456,7 @@ CMD:ammo(playerid, params[])
 
 CMD:faq(playerid, params[])
 {
-	Dialog_Show(playerid, FAQ, DIALOG_STYLE_LIST, "Frequently Asked Questions", "How do I enter a building?\nHow do I access my inventory?\nHow do I pickup dropped items?\nWhat are the icons on my screen?\nHow do I refill my hunger and thirst?\nHow do I search for certain areas?\nHow do I stop working with my job?\nHow do I take out weapons and load them?\nHow do I edit the furniture in my house?\nHow do I interact with stuff in the server?", "Select", "Cancel");
+	Dialog_Show(playerid, FAQ, DIALOG_STYLE_LIST, "Frequently Asked Questions", "How do I enter a building?\nHow do I access my inventory?\nHow do I pickup dropped items?\nWhat are the icons on my screen?\nHow do I refill my hunger and thirst?\nHow do I search for certain areas?\nHow do I stop working with my job?\nHow do I take out weapons and load them?\nHow do I edit the furniture in my house?\nHow do I interact with stuff in the server?", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -31477,7 +31465,7 @@ CMD:atm(playerid, params[])
 	if (ATM_Nearest(playerid) == -1)
 	    return SendErrorMessage(playerid, "You are not in range of any ATM machine.");
 
-	Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s", "Select", "Cancel", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
+	Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s", "Selecionar", "Cancelar", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
 	return 1;
 }
 
@@ -31486,7 +31474,7 @@ CMD:bank(playerid, params[])
 	if (!IsPlayerInBank(playerid))
 	    return SendErrorMessage(playerid, "You are not in range of any bank.");
 
-	Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s", "Select", "Cancel", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
+	Dialog_Show(playerid, Bank, DIALOG_STYLE_LIST, "Bank Account", "Bank Balance: %s", "Selecionar", "Cancelar", FormatNumber(PlayerData[playerid][pBankMoney]), FormatNumber(PlayerData[playerid][pSavings]));
 	return 1;
 }
 
@@ -31813,7 +31801,7 @@ CMD:furniture(playerid, params[])
     		format(string, sizeof(string), "%s%s (%.2f meters)\n", string, FurnitureData[i][furnitureName], GetPlayerDistanceFromPoint(playerid, FurnitureData[i][furniturePos][0], FurnitureData[i][furniturePos][1], FurnitureData[i][furniturePos][2]));
 		}
 		if (count) {
-			Dialog_Show(playerid, ListedFurniture, DIALOG_STYLE_LIST, "Listed Furniture", string, "Select", "Cancel");
+			Dialog_Show(playerid, ListedFurniture, DIALOG_STYLE_LIST, "Listed Furniture", string, "Selecionar", "Cancelar");
      	}
      	else SendErrorMessage(playerid, "This house doesn't have any furniture spawned.");
 	}
@@ -32263,10 +32251,10 @@ CMD:phone(playerid, params[])
 	format(str, sizeof(str), "Phone (#%d)", PlayerData[playerid][pPhone]);
 
 	if (PlayerData[playerid][pPhoneOff]) {
-		Dialog_Show(playerid, MyPhone, DIALOG_STYLE_LIST, str, "Dial Number\nMy Contacts\nSend Text Message\nTurn On Phone", "Select", "Cancel");
+		Dialog_Show(playerid, MyPhone, DIALOG_STYLE_LIST, str, "Dial Number\nMy Contacts\nSend Text Message\nTurn On Phone", "Selecionar", "Cancelar");
 	}
 	else {
-	    Dialog_Show(playerid, MyPhone, DIALOG_STYLE_LIST, str, "Dial Number\nMy Contacts\nSend Text Message\nTurn Off Phone", "Select", "Cancel");
+	    Dialog_Show(playerid, MyPhone, DIALOG_STYLE_LIST, str, "Dial Number\nMy Contacts\nSend Text Message\nTurn Off Phone", "Selecionar", "Cancelar");
 	}
 	return 1;
 }
@@ -32817,7 +32805,7 @@ CMD:open(playerid, params[])
 	{
 		if (strlen(GateData[id][gatePass]))
 		{
-		    Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Please enter the password for this gate below:", "Submit", "Cancel");
+		    Dialog_Show(playerid, GatePass, DIALOG_STYLE_INPUT, "Enter Password", "Please enter the password for this gate below:", "Enviar", "Cancelar");
 		}
 		else
 		{
@@ -33060,7 +33048,7 @@ CMD:editfaction(playerid, params[])
 	else if (!strcmp(type, "locker", true))
 	{
         PlayerData[playerid][pFactionEdit] = id;
-		Dialog_Show(playerid, FactionLocker, DIALOG_STYLE_LIST, "Faction Locker", "Set Location\nLocker Weapons", "Select", "Cancel");
+		Dialog_Show(playerid, FactionLocker, DIALOG_STYLE_LIST, "Faction Locker", "Set Location\nLocker Weapons", "Selecionar", "Cancelar");
 	}
 	return 1;
 }
@@ -33082,7 +33070,7 @@ CMD:color(playerid, params[])
 
 CMD:joblist(playerid, params[])
 {
-	Dialog_Show(playerid, JobList, DIALOG_STYLE_LIST, "Job List", "Courier\nMechanic\nTaxi Driver\nCargo Unloader\nMiner\nFood Vendor\nGarbage Man\nPackage Sorter\nWeapon Smuggler", "Select", "Cancel");
+	Dialog_Show(playerid, JobList, DIALOG_STYLE_LIST, "Job List", "Courier\nMechanic\nTaxi Driver\nCargo Unloader\nMiner\nFood Vendor\nGarbage Man\nPackage Sorter\nWeapon Smuggler", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -33097,9 +33085,9 @@ CMD:flocker(playerid, params[])
 	    return SendErrorMessage(playerid, "You are not in range of your faction's locker.");
 
  	if (FactionData[factionid][factionType] != FACTION_GANG)
-		Dialog_Show(playerid, Locker, DIALOG_STYLE_LIST, "Faction Locker", "Toggle Duty\nArmored Vest\nLocker Skins\nLocker Weapons", "Select", "Cancel");
+		Dialog_Show(playerid, Locker, DIALOG_STYLE_LIST, "Faction Locker", "Toggle Duty\nArmored Vest\nLocker Skins\nLocker Weapons", "Selecionar", "Cancelar");
 
-	else Dialog_Show(playerid, Locker, DIALOG_STYLE_LIST, "Faction Locker", "Locker Skins\nLocker Weapons", "Select", "Cancel");
+	else Dialog_Show(playerid, Locker, DIALOG_STYLE_LIST, "Faction Locker", "Locker Skins\nLocker Weapons", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -33690,7 +33678,7 @@ CMD:mdc(playerid, params[])
 	if (!IsACruiser(GetPlayerVehicleID(playerid)))
 	    return SendErrorMessage(playerid, "You must be inside a police cruiser.");
 
-	Dialog_Show(playerid, MainMDC, DIALOG_STYLE_LIST, "Mobile Data Computer", "Active Warrants\nPlace Charges\nView Charges", "Select", "Cancel");
+	Dialog_Show(playerid, MainMDC, DIALOG_STYLE_LIST, "Mobile Data Computer", "Active Warrants\nPlace Charges\nView Charges", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -34106,7 +34094,7 @@ CMD:gps(playerid, params[])
 	if (PlayerData[playerid][pInjured] || PlayerData[playerid][pLoading] > 0 || PlayerData[playerid][pUnloading] != -1 || PlayerData[playerid][pDeliverShipment] > 0)
 	    return SendErrorMessage(playerid, "You can't use this command at the moment.");
 
-	Dialog_Show(playerid, MainGPS, DIALOG_STYLE_LIST, "GPS System", "Find House\nFind Business\nFind Entrance\nFind Job\nCustom Locations", "Select", "Cancel");
+	Dialog_Show(playerid, MainGPS, DIALOG_STYLE_LIST, "GPS System", "Find House\nFind Business\nFind Entrance\nFind Job\nCustom Locations", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -35174,7 +35162,7 @@ CMD:itemlist(playerid, params[])
 			format(string, sizeof(string), "%s%s\n", string, g_aInventoryItems[i][e_InventoryItem]);
 		}
 	}
-	return Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_LIST, "List of Items", string, "Select", "Cancel");
+	return Dialog_Show(playerid, ShowOnly, DIALOG_STYLE_LIST, "List of Items", string, "Selecionar", "Cancelar");
 }
 
 CMD:createimpound(playerid, params[])
@@ -35297,7 +35285,7 @@ CMD:releasecar(playerid, params[])
 	if (!count)
 	    SendErrorMessage(playerid, "You don't have any impounded vehicles.");
 
-	else Dialog_Show(playerid, ReleaseCar, DIALOG_STYLE_LIST, "Release Vehicle", string, "Select", "Cancel");
+	else Dialog_Show(playerid, ReleaseCar, DIALOG_STYLE_LIST, "Release Vehicle", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -36991,7 +36979,7 @@ CMD:atune(playerid, params[])
 	if (!IsDoorVehicle(GetPlayerVehicleID(playerid)))
 	    return SendErrorMessage(playerid, "You can't tune this vehicle.");
 
-	Dialog_Show(playerid, TuneVehicle, DIALOG_STYLE_LIST, "Tune Vehicle", "Add Wheels\nAdd Nitrous\nAdd Hydraulics", "Select", "Cancel");
+	Dialog_Show(playerid, TuneVehicle, DIALOG_STYLE_LIST, "Tune Vehicle", "Add Wheels\nAdd Nitrous\nAdd Hydraulics", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -37052,9 +37040,9 @@ CMD:panel(playerid, params[])
 	    return SendErrorMessage(playerid, "You don't have permission to use this command.");
 
 	if (g_ServerLocked)
-		Dialog_Show(playerid, ServerPanel, DIALOG_STYLE_LIST, "Server Panel", "Unlock Server\nSet Hostname\nExecute Query", "Select", "Cancel");
+		Dialog_Show(playerid, ServerPanel, DIALOG_STYLE_LIST, "Server Panel", "Unlock Server\nSet Hostname\nExecute Query", "Selecionar", "Cancelar");
 
-	else Dialog_Show(playerid, ServerPanel, DIALOG_STYLE_LIST, "Server Panel", "Lock Server\nSet Hostname\nExecute Query", "Select", "Cancel");
+	else Dialog_Show(playerid, ServerPanel, DIALOG_STYLE_LIST, "Server Panel", "Lock Server\nSet Hostname\nExecute Query", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -37722,7 +37710,7 @@ CMD:startdelivery(playerid, params[])
     if (IsPlayerInAnyVehicle(playerid))
     	return SendErrorMessage(playerid, "You must exit the vehicle first.");
 
-	Dialog_Show(playerid, StartDelivery, DIALOG_STYLE_LIST, "Select Type", "Retail Supplies\nAmmunition\nClothing\nFood Supplies\nGasoline\nFurniture", "Select", "Cancel");
+	Dialog_Show(playerid, StartDelivery, DIALOG_STYLE_LIST, "Select Type", "Retail Supplies\nAmmunition\nClothing\nFood Supplies\nGasoline\nFurniture", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -37959,7 +37947,7 @@ CMD:tasks(playerid, params[])
 	if (!PlayerData[playerid][pTestTask])
 	    strcat(string, "Visit DMV (pending)\n");
 
-	Dialog_Show(playerid, NewTasks, DIALOG_STYLE_LIST, "Task List", string, "Select", "Cancel");
+	Dialog_Show(playerid, NewTasks, DIALOG_STYLE_LIST, "Task List", string, "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -38580,7 +38568,7 @@ CMD:setradio(playerid, params[])
 	if (!IsEngineVehicle(vehicleid))
 	    return SendErrorMessage(playerid, "This vehicle doesn't have any radio.");
 
-	Dialog_Show(playerid, Radio, DIALOG_STYLE_LIST, "Radio Channels", "Cultural\nOldies\nOther\nPop\nRhythm & Blues\nRock\nTalk\nUrban\nElectric\nTurn Radio Off", "Select", "Cancel");
+	Dialog_Show(playerid, Radio, DIALOG_STYLE_LIST, "Radio Channels", "Cultural\nOldies\nOther\nPop\nRhythm & Blues\nRock\nTalk\nUrban\nElectric\nTurn Radio Off", "Selecionar", "Cancelar");
 	return 1;
 }
 
@@ -38643,7 +38631,7 @@ CMD:fspray(playerid, params[])
 	if (GetFactionType(playerid) != FACTION_GANG)
 	    return SendErrorMessage(playerid, "You are not a member of an illegal faction.");
 
-	Dialog_Show(playerid, GraffitiColor, DIALOG_STYLE_LIST, "Select Color", "{FFFFFF}White\n{FF0000}Red\n{FFFF00}Yellow\n{33CC33}Green\n{33CCFF}Light Blue\n{FFA500}Orange\n{1394BF}Dark Blue", "Select", "Cancel");
+	Dialog_Show(playerid, GraffitiColor, DIALOG_STYLE_LIST, "Select Color", "{FFFFFF}White\n{FF0000}Red\n{FFFF00}Yellow\n{33CC33}Green\n{33CCFF}Light Blue\n{FFA500}Orange\n{1394BF}Dark Blue", "Selecionar", "Cancelar");
 	return 1;
 }
 
